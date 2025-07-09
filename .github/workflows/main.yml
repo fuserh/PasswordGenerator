@@ -24,7 +24,6 @@ jobs:
         cached: true
         # 添加环境变量导出
         setup-python: true
-        cached: true
         
     - name: Print Qt environment (debug)
       run: |
