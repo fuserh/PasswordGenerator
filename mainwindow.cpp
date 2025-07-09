@@ -1,12 +1,18 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+
 #include <QClipboard>
-#include <QRandomGenerator>
 #include <QMessageBox>
+#include <QRandomGenerator>
 #include <QDateTime>
 #include <QFileDialog>
 #include <QStandardPaths>
 #include <QTextStream>
+#include <QTimer>               // 添加 QTimer 头文件
+#include <QStringListModel>     // 添加 QStringListModel 头文件
+#include <QListView>            // 添加 QListView 头文件
+#include <QDialog>              // 添加 QDialog 头文件
+#include <QVBoxLayout>          // 添加 QVBoxLayout 头文件
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -15,7 +21,6 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     setWindowTitle("密码生成器");
-    setWindowIcon(QIcon(":/icons/icon.png"));
     
     // 加载历史记录
     passwordHistory = settings.value("history", QStringList()).toStringList();
@@ -27,15 +32,15 @@ MainWindow::MainWindow(QWidget *parent)
     ui->numbersCheck->setChecked(settings.value("useNumbers", true).toBool());
     ui->symbolsCheck->setChecked(settings.value("useSymbols", true).toBool());
     
-    // 连接信号槽
+    // 连接信号槽 - 使用 checkStateChanged 替代弃用的 stateChanged
     connect(ui->generateButton, &QPushButton::clicked, this, &MainWindow::generatePassword);
     connect(ui->copyButton, &QPushButton::clicked, this, &MainWindow::copyToClipboard);
     connect(ui->historyButton, &QPushButton::clicked, this, &MainWindow::showHistory);
     connect(ui->saveButton, &QPushButton::clicked, this, &MainWindow::savePassword);
     connect(ui->lengthSlider, &QSlider::valueChanged, this, &MainWindow::updateLength);
-    connect(ui->lettersCheck, &QCheckBox::stateChanged, this, &MainWindow::updateStrength);
-    connect(ui->numbersCheck, &QCheckBox::stateChanged, this, &MainWindow::updateStrength);
-    connect(ui->symbolsCheck, &QCheckBox::stateChanged, this, &MainWindow::updateStrength);
+    connect(ui->lettersCheck, &QCheckBox::checkStateChanged, this, &MainWindow::updateStrength);
+    connect(ui->numbersCheck, &QCheckBox::checkStateChanged, this, &MainWindow::updateStrength);
+    connect(ui->symbolsCheck, &QCheckBox::checkStateChanged, this, &MainWindow::updateStrength);
     
     // 初始生成密码
     generatePassword();
@@ -66,23 +71,31 @@ void MainWindow::generatePassword()
     saveToHistory(password);
 }
 
-QString MainWindow::generateRandomPassword(int length, bool useLetters, bool useNumbers, bool useSymbols) const
+QString MainWindow::generateRandomPassword(int length, 
+                                          bool useLetters, 
+                                          bool useNumbers, 
+                                          bool useSymbols) const
 {
-    QString characters;
-    if (useLetters) characters += "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    if (useNumbers) characters += "0123456789";
-    if (useSymbols) characters += "!@#$%^&*()_+-=[]{}|;:,.<>?";
+    const QString letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const QString numbers = "0123456789";
+    const QString symbols = "!@#$%^&*()_+-=[]{}|;:,.<>?";
+
+    QString validChars;
+    if (useLetters) validChars += letters;
+    if (useNumbers) validChars += numbers;
+    if (useSymbols) validChars += symbols;
     
-    if (characters.isEmpty()) {
+    if (validChars.isEmpty()) {
         return "请至少选择一种字符类型";
     }
     
     QString password;
-    auto *generator = QRandomGenerator::securelySeeded();
+    // 正确使用 QRandomGenerator - 移除指针声明
+    QRandomGenerator generator = QRandomGenerator::securelySeeded();
     
     for (int i = 0; i < length; ++i) {
-        int index = generator->bounded(characters.length());
-        password.append(characters.at(index));
+        const int index = generator.bounded(validChars.length());
+        password.append(validChars.at(index));
     }
     
     return password;
