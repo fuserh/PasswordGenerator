@@ -50,7 +50,6 @@ jobs:
         ls -la
         file PasswordGenerator
         
-    # 添加 UPX 压缩步骤
     - name: Install UPX
       run: |
         sudo apt-get install -y upx
@@ -58,8 +57,11 @@ jobs:
     - name: Compress binary with UPX
       run: |
         cd build
-        upx --best --lzma PasswordGenerator -o PasswordGenerator-compressed
-        chmod +x PasswordGenerator-compressed
+        upx --best --lzma PasswordGenerator -o PasswordGenerator-upx
+        chmod +x PasswordGenerator-upx
+        ls -la --block-size=K PasswordGenerator*
+        echo "Original size: $(stat -c%s PasswordGenerator) bytes"
+        echo "Compressed size: $(stat -c%s PasswordGenerator-upx) bytes"
         
     - name: Create Debian package
       run: |
@@ -89,11 +91,17 @@ jobs:
         
         dpkg-deb --build password-generator
         mv password-generator.deb PasswordGenerator_1.1_amd64.deb
- 
+        
+    - name: List artifacts
+      run: |
+        echo "Artifacts to upload:"
+        ls -la build/PasswordGenerator-upx
+        ls -la PasswordGenerator_1.1_amd64.deb
+
     - name: Upload artifact
       uses: actions/upload-artifact@v4.6.2
       with:
         name: PasswordGenerator_Debian
         path: |
-          build/PasswordGenerator-compressed  # 压缩后的独立二进制文件
-          PasswordGenerator_1.1_amd64.deb     # Debian 包
+          build/PasswordGenerator-upx
+          PasswordGenerator_1.1_amd64.deb
