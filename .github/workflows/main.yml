@@ -19,7 +19,6 @@ jobs:
     - name: Set up Qt
       uses: jurplel/install-qt-action@v4.3.0
       with:
-        qt-version: 6.9.0
         cmake: true
         cached: true
         # 添加环境变量导出
@@ -29,6 +28,8 @@ jobs:
       run: |
         echo "Qt6_DIR: $Qt6_DIR"
         echo "PATH: $PATH"
+        ls -la $Qt6_DIR
+        ls -la $Qt6_DIR/../
         
     - name: Install dependencies
       run: |
@@ -67,7 +68,7 @@ jobs:
         Priority: optional
         Architecture: amd64
         Maintainer: Security Team <security@example.com>
-        Depends: libqt6core6 (>= 6.9.0), libqt6gui6 (>= 6.9.0), libqt6widgets6 (>= 6.9.0), libc6 (>= 2.31)
+        Depends: libqt6core6 (>= 6.8.3), libqt6gui6 (>= 6.8.3), libqt6widgets6 (>= 6.8.3), libc6 (>= 2.31)
         Description: Secure password generator
          A Qt-based application for generating random passwords with options for
          letters, numbers, and special characters. Includes history tracking and
