@@ -1,42 +1,31 @@
 cmake_minimum_required(VERSION 3.16)
 project(PasswordGenerator VERSION 1.1 LANGUAGES CXX)
 
-# 设置源目录变量
-set(SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-
-# 打印调试信息
-message(STATUS "项目源目录: ${SOURCE_DIR}")
-message(STATUS "当前构建目录: ${CMAKE_CURRENT_BINARY_DIR}")
-
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-# 显式设置UI文件搜索路径
-set(CMAKE_AUTOUIC_SEARCH_PATHS ${SOURCE_DIR})
-
-find_package(Qt6 REQUIRED COMPONENTS Widgets)
-
-# 使用相对路径声明文件
-file(GLOB SOURCES
-    "${SOURCE_DIR}/*.cpp"
+# 显式设置源文件列表
+set(SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/mainwindow.cpp
 )
 
-file(GLOB HEADERS
-    "${SOURCE_DIR}/*.h"
+set(HEADERS
+    ${CMAKE_CURRENT_SOURCE_DIR}/mainwindow.h
 )
 
-file(GLOB FORMS
-    "${SOURCE_DIR}/*.ui"
+set(FORMS
+    ${CMAKE_CURRENT_SOURCE_DIR}/mainwindow.ui
 )
 
-file(GLOB RESOURCES
-    "${SOURCE_DIR}/*.qrc"
+set(RESOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/resources.qrc
 )
 
-# 打印找到的文件
+# 打印调试信息
 message(STATUS "源文件: ${SOURCES}")
 message(STATUS "头文件: ${HEADERS}")
 message(STATUS "UI文件: ${FORMS}")
@@ -56,11 +45,11 @@ install(TARGETS PasswordGenerator
     RUNTIME DESTINATION bin
 )
 
-install(FILES ${SOURCE_DIR}/PasswordGenerator.desktop
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/PasswordGenerator.desktop
     DESTINATION share/applications
 )
 
-install(FILES ${SOURCE_DIR}/icons/icon.png
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/icons/icon.png
     DESTINATION share/icons/hicolor/128x128/apps
     RENAME PasswordGenerator.png
 )
