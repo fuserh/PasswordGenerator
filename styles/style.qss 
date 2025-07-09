@@ -1,0 +1,74 @@
+QMainWindow {
+    background-color: #f5f5f5;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+QLabel#titleLabel {
+    font-size: 24px;
+    font-weight: bold;
+    color: #2c3e50;
+    padding: 10px;
+}
+
+QPushButton {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background-color: #2980b9;
+}
+
+QPushButton:pressed {
+    background-color: #1c6ea4;
+}
+
+QPushButton#copyButton {
+    background-color: #2ecc71;
+}
+
+QPushButton#copyButton:hover {
+    background-color: #27ae60;
+}
+
+QLineEdit {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    font-family: monospace;
+    font-size: 14px;
+}
+
+QSlider::groove:horizontal {
+    height: 8px;
+    background: #ddd;
+    border-radius: 4px;
+}
+
+QSlider::handle:horizontal {
+    width: 18px;
+    height: 18px;
+    margin: -5px 0;
+    border-radius: 9px;
+    background: #3498db;
+}
+
+QCheckBox {
+    spacing: 8px;
+    font-size: 14px;
+}
+
+QProgressBar {
+    height: 12px;
+    border-radius: 6px;
+    background-color: #eee;
+}
+
+QProgressBar::chunk {
+    border-radius: 6px;
+}
