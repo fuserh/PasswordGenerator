@@ -12,6 +12,9 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4.2.2
+
+    - name: List files (debug)
+      run: ls -la
       
     - name: Set up Qt
       uses: jurplel/install-qt-action@v4.3.0
@@ -28,8 +31,16 @@ jobs:
         
     - name: Configure and build
       run: |
-        cmake -B build -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
-        cmake --build build --parallel
+        mkdir build
+        cd build
+        cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
+        cmake --build . --parallel
+        
+    - name: Verify build
+      run: |
+        cd build
+        ls -la
+        file PasswordGenerator
         
     - name: Create AppDir
       run: |
@@ -46,20 +57,19 @@ jobs:
     - name: Bundle dependencies
       run: |
         ./linuxdeployqt-continuous-x86_64.AppImage AppDir/usr/bin/PasswordGenerator -appimage
-        ./linuxdeployqt-continuous-x86_64.AppImage AppDir/PasswordGenerator.desktop -appimage
         
     - name: Create Debian package
       run: |
-        mkdir -p password-generator_1.1-1_amd64/usr/bin
-        mkdir -p password-generator_1.1-1_amd64/usr/share/applications
-        mkdir -p password-generator_1.1-1_amd64/usr/share/icons/hicolor/128x128/apps
+        mkdir -p password-generator/usr/bin
+        mkdir -p password-generator/usr/share/applications
+        mkdir -p password-generator/usr/share/icons/hicolor/128x128/apps
         
-        cp AppDir/usr/bin/PasswordGenerator password-generator_1.1-1_amd64/usr/bin/
-        cp PasswordGenerator.desktop password-generator_1.1-1_amd64/usr/share/applications/
-        cp icons/icon.png password-generator_1.1-1_amd64/usr/share/icons/hicolor/128x128/apps/PasswordGenerator.png
+        cp build/PasswordGenerator password-generator/usr/bin/
+        cp PasswordGenerator.desktop password-generator/usr/share/applications/
+        cp icons/icon.png password-generator/usr/share/icons/hicolor/128x128/apps/PasswordGenerator.png
         
-        mkdir -p password-generator_1.1-1_amd64/DEBIAN
-        cat > password-generator_1.1-1_amd64/DEBIAN/control <<EOF
+        mkdir -p password-generator/DEBIAN
+        cat > password-generator/DEBIAN/control <<EOF
         Package: password-generator
         Version: 1.1-1
         Section: utils
@@ -73,8 +83,8 @@ jobs:
          password strength estimation.
         EOF
         
-        dpkg-deb --build password-generator_1.1-1_amd64
-        mv password-generator_1.1-1_amd64.deb PasswordGenerator_1.1_amd64.deb 
+        dpkg-deb --build password-generator
+        mv password-generator.deb PasswordGenerator_1.1_amd64.deb
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4.6.2
