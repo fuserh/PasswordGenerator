@@ -19,7 +19,7 @@ jobs:
         qt-version: 6.9.0
         cmake: true
         cached: true
-        
+
     - name: Install dependencies
       run: |
         sudo apt-get update
@@ -31,17 +31,17 @@ jobs:
         cmake -B build -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
         cmake --build build --parallel
         
-    - name: Install linuxdeployqt
-      run: |
-        wget https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage
-        chmod +x linuxdeployqt-continuous-x86_64.AppImage
-        
     - name: Create AppDir
       run: |
         mkdir -p AppDir/usr/bin
         cp build/PasswordGenerator AppDir/usr/bin/
         cp PasswordGenerator.desktop AppDir/
         cp icons/icon.png AppDir/PasswordGenerator.png
+        
+    - name: Install linuxdeployqt
+      run: |
+        wget -q https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage
+        chmod +x linuxdeployqt-continuous-x86_64.AppImage
         
     - name: Bundle dependencies
       run: |
@@ -74,12 +74,12 @@ jobs:
         EOF
         
         dpkg-deb --build password-generator_1.1-1_amd64
-        mv password-generator_1.1-1_amd64.deb PasswordGenerator_1.1_amd64.deb
-        
+        mv password-generator_1.1-1_amd64.deb PasswordGenerator_1.1_amd64.deb 
+
     - name: Upload artifact
       uses: actions/upload-artifact@v4.6.2
       with:
         name: PasswordGenerator_Debian
         path: |
           PasswordGenerator_1.1_amd64.deb
-          PasswordGenerator-x86_64.AppImage
+          PasswordGenerator*.AppImage
