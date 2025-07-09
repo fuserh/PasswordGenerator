@@ -1,0 +1,76 @@
+/* 基础样式 */
+QMainWindow {
+    background-color: #f0f0f0;
+    font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+}
+
+/* 标题样式 */
+#titleLabel {
+    font-size: 24px;
+    font-weight: bold;
+    color: #2c3e50;
+    padding: 10px 0;
+}
+
+/* 按钮基础样式 */
+QPushButton {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background-color: #2980b9;
+}
+
+QPushButton:pressed {
+    background-color: #1c6ea4;
+}
+
+/* 复制按钮特殊样式 */
+#copyButton {
+    background-color: #2ecc71;
+}
+
+#copyButton:hover {
+    background-color: #27ae60;
+}
+
+/* 密码显示框 */
+#passwordDisplay {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 8px;
+    font-family: monospace;
+    font-size: 14px;
+}
+
+/* 滑块样式 */
+QSlider::groove:horizontal {
+    height: 8px;
+    background: #ddd;
+    border-radius: 4px;
+}
+
+QSlider::handle:horizontal {
+    width: 18px;
+    height: 18px;
+    margin: -5px 0;
+    border-radius: 9px;
+    background: #3498db;
+}
+
+/* 进度条样式 */
+#strengthBar {
+    height: 12px;
+    border-radius: 6px;
+    background-color: #eee;
+}
+
+#strengthBar::chunk {
+    border-radius: 6px;
+}
