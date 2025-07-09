@@ -40,8 +40,8 @@ message(STATUS "头文件: ${HEADERS}")
 message(STATUS "UI文件: ${FORMS}")
 message(STATUS "资源文件: ${RESOURCES}")
 
-# 查找 Qt6 包
-find_package(Qt6 6.9 COMPONENTS Widgets REQUIRED)
+# 查找 Qt6 包 - 接受 6.8.3 版本
+find_package(Qt6 6.8.3 COMPONENTS Widgets REQUIRED)
 
 message(STATUS "Found Qt6: ${Qt6_FOUND}")
 message(STATUS "Qt6 Widgets found: ${Qt6Widgets_FOUND}")
