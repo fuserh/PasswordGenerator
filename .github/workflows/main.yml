@@ -22,7 +22,15 @@ jobs:
         qt-version: 6.9.0
         cmake: true
         cached: true
-
+        # 添加环境变量导出
+        setup-python: true
+        cached: true
+        
+    - name: Print Qt environment (debug)
+      run: |
+        echo "Qt6_DIR: $Qt6_DIR"
+        echo "PATH: $PATH"
+        
     - name: Install dependencies
       run: |
         sudo apt-get update
@@ -41,22 +49,6 @@ jobs:
         cd build
         ls -la
         file PasswordGenerator
-        
-    - name: Create AppDir
-      run: |
-        mkdir -p AppDir/usr/bin
-        cp build/PasswordGenerator AppDir/usr/bin/
-        cp PasswordGenerator.desktop AppDir/
-        cp icons/icon.png AppDir/PasswordGenerator.png
-        
-    - name: Install linuxdeployqt
-      run: |
-        wget -q https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage
-        chmod +x linuxdeployqt-continuous-x86_64.AppImage
-        
-    - name: Bundle dependencies
-      run: |
-        ./linuxdeployqt-continuous-x86_64.AppImage AppDir/usr/bin/PasswordGenerator -appimage
         
     - name: Create Debian package
       run: |
@@ -92,4 +84,3 @@ jobs:
         name: PasswordGenerator_Debian
         path: |
           PasswordGenerator_1.1_amd64.deb
-          PasswordGenerator*.AppImage
