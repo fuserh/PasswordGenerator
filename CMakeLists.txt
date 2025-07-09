@@ -1,6 +1,15 @@
 cmake_minimum_required(VERSION 3.16)
 project(PasswordGenerator VERSION 1.1 LANGUAGES CXX)
 
+# 设置 Qt6 路径（GitHub Actions 特定）
+if(DEFINED ENV{Qt6_DIR})
+    set(Qt6_DIR $ENV{Qt6_DIR})
+    message(STATUS "Using Qt6_DIR from environment: ${Qt6_DIR}")
+endif()
+
+# 确保 CMake 能找到 Qt6
+set(CMAKE_PREFIX_PATH "${Qt6_DIR};${CMAKE_PREFIX_PATH}")
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
@@ -30,6 +39,13 @@ message(STATUS "源文件: ${SOURCES}")
 message(STATUS "头文件: ${HEADERS}")
 message(STATUS "UI文件: ${FORMS}")
 message(STATUS "资源文件: ${RESOURCES}")
+
+# 查找 Qt6 包
+find_package(Qt6 6.9 COMPONENTS Widgets REQUIRED)
+
+message(STATUS "Found Qt6: ${Qt6_FOUND}")
+message(STATUS "Qt6 Widgets found: ${Qt6Widgets_FOUND}")
+message(STATUS "Qt6 version: ${Qt6_VERSION}")
 
 add_executable(PasswordGenerator
     ${SOURCES}
